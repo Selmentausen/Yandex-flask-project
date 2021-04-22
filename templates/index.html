@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+{% for item in books %}
+<div class="card" style="width: 18rem;">
+    <a href="#"><img src="..." class="card-img-top" alt="..."></a>
+    <div class="card-body">
+        <h5 class="card-title">{{ item.title }}</h5>
+        <p class="card-text">{{ item.description }}</p>
+        <p class="card-text">{{ item.author }}</p>
+        <a href="#" class="btn btn-primary">About</a>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
