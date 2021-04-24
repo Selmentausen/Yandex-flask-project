@@ -8,8 +8,8 @@ class Book(SqlAlchemyBase, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
-    title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    image_path = sqlalchemy.Column(sqlalchemy.String, default='img/placeholder.png')
+    title = sqlalchemy.Column(sqlalchemy.String, index=True)
     author = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    content = sqlalchemy.Column(sqlalchemy.String,
-                                index=True, unique=True, nullable=True)
+    content = sqlalchemy.Column(sqlalchemy.String, nullable=True)

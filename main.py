@@ -1,17 +1,22 @@
-from flask import Flask, render_template, redirect
+import os
+from flask import Flask, render_template, redirect, request, url_for
 from data import db_session
 from data.users import User
 from data.books import Book
 from forms.user import RegisterForm, LoginForm
+from forms.book import BookForm
 from flask_restful import Api
 from flask_login import LoginManager, login_user, login_required, logout_user
 from resources import user_resource, book_resource
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static')
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 api = Api(app)
-app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
 @login_manager.user_loader
@@ -72,6 +77,28 @@ def register():
         db_sess.commit()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
+
+
+@app.route('/add_book', methods=['GET', 'POST'])
+def add_book():
+    form = BookForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        book = Book(
+            title=form.title.data,
+            author=form.author.data,
+            description=form.description.data,
+            content=form.content.data,
+        )
+        if form.image.data:
+            image_path = f'img/{secure_filename(form.image.data.filename)}'
+            request.files[form.image.name].save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
+            book.image_path = image_path
+        session.add(book)
+        session.commit()
+        return redirect('/')
+    else:
+        return render_template('add_book.html', title='Добавление книги', form=form)
 
 
 def main():

@@ -1,14 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="container">
 {% for item in books %}
-<div class="card" style="width: 18rem;">
-    <a href="#"><img src="..." class="card-img-top" alt="..."></a>
-    <div class="card-body">
-        <h5 class="card-title">{{ item.title }}</h5>
-        <p class="card-text">{{ item.description }}</p>
-        <p class="card-text">{{ item.author }}</p>
-        <a href="#" class="btn btn-primary">About</a>
-    </div>
-</div>
+    {% if loop.index0 is divisibleby(3)%}
+        <div class="row">
+    {% endif %}
+            <div class="card" style="width: 18rem;">
+                <a href="#"><img src="/static/{{ item.image_path }}" class="card-img-top" alt="Image Not Found" onerror=this.src="/static/img/placeholder.png"></a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="card-text">{{ item.description }}</p>
+                    <p class="card-text">{{ item.author }}</p>
+                    <a href="#" class="btn btn-primary">About</a>
+                </div>
+            </div>
+    {% if loop.index is divisibleby(3)%}
+        </div>
+    {% endif %}
 {% endfor %}
+</div>
 {% endblock %}
