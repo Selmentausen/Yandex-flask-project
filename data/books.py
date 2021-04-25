@@ -1,6 +1,7 @@
 import sqlalchemy
 from sqlalchemy_serializer import SerializerMixin
 from .db_session import SqlAlchemyBase
+from sqlalchemy import orm
 
 
 class Book(SqlAlchemyBase, SerializerMixin):
@@ -13,3 +14,5 @@ class Book(SqlAlchemyBase, SerializerMixin):
     author = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     content = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'), nullable=True)
+    user = orm.relation('User')

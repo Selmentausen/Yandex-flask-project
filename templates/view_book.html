@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <div class="border rounded">
+        <img class="img-fluid" src="/static/{{ book.image_path }}">
+    </div>
+    <div class="border rounded">
+        <h4>Титул: "{{ book.title }}"</h4>
+        <h5>Автор: "{{ book.author }}"</h5>
+    </div>
+
+    <h4>Описание</h4>
+    <div class="border rounded">
+        <p>{{ book.description }}</p>
+    </div>
+
+    {% if current_user.is_authenticated %}
+    <h4>Содержание</h4>
+    <div class="border rounded">
+        <p>{{ book.content }}</p>
+    </div>
+    {% else %}
+    <div class="alert alert-danger" role="alert">
+        Содержание книг доступно только зарегестрированным пользователям <a class="alert-link" href="/login">Войти</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

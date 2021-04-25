@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request
 from data import db_session
 from data.users import User
 from data.books import Book
@@ -99,6 +99,13 @@ def add_book():
         return redirect('/')
     else:
         return render_template('add_book.html', title='Добавление книги', form=form)
+
+
+@app.route('/view_book/<int:book_id>')
+def view_book(book_id):
+    session = db_session.create_session()
+    book = session.query(Book).get(book_id)
+    return render_template('view_book.html', book=book)
 
 
 def main():
