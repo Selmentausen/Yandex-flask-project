@@ -25,5 +25,15 @@
         Содержание книг доступно только зарегестрированным пользователям <a class="alert-link" href="/login">Войти</a>
     </div>
     {% endif %}
+    {% if current_user == book.user %}
+    <div>
+        <a href="/book/{{ book.id }}" class="btn btn-warning">
+            Изменить
+        </a>
+        <a href="/book_delete/{{ book.id }}" class="btn btn-danger">
+            Удалить
+        </a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

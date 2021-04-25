@@ -13,6 +13,7 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static')
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -88,7 +89,8 @@ def user_page(user_id):
     return render_template('user_page.html', user=user)
 
 
-@app.route('/add_book', methods=['GET', 'POST'])
+@login_required
+@app.route('/book', methods=['GET', 'POST'])
 def add_book():
     form = BookForm()
     if form.validate_on_submit():
@@ -101,19 +103,65 @@ def add_book():
         )
         if form.image.data:
             image_path = f'img/{secure_filename(form.image.data.filename)}'
-            request.files[form.image.name].save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
+            request.files[form.image.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
             book.image_path = image_path
-        session.add(book)
+        current_user.books.append(book)
+        session.merge(current_user)
         session.commit()
         return redirect('/')
     else:
         return render_template('add_book.html', title='Добавление книги', form=form)
 
 
+@login_required
+@app.route('/book_delete/<int:book_id>')
+def delete_book(book_id):
+    session = db_session.create_session()
+    book = session.query(Book).get(book_id)
+    if not book:
+        abort(404)
+    session.delete(book)
+    session.commit()
+    return redirect('/')
+
+
+@app.route('/book/<int:book_id>', methods=['GET', 'POST'])
+def edit_book(book_id):
+    form = BookForm()
+    if request.method == "GET":
+        db_sess = db_session.create_session()
+        book = db_sess.query(Book).get(book_id)
+        if not book:
+            abort(404)
+        form.title.data = book.title
+        form.content.data = book.content
+        form.author.data = book.author
+        form.description.data = book.description
+
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        book = session.query(Book).get(book_id)
+        if not book:
+            abort(404)
+        book.title = form.title.data
+        book.description = form.description.data
+        book.author = form.author.data
+        if form.image.data:
+            image_path = f'img/{secure_filename(form.image.data.filename)}'
+            request.files[form.image.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
+            book.image_path = image_path
+        session.commit()
+        return redirect(f'/view_book/{book.id}')
+
+    return render_template('add_book.html', form=form, title='Изменение книги')
+
+
 @app.route('/view_book/<int:book_id>')
 def view_book(book_id):
     session = db_session.create_session()
     book = session.query(Book).get(book_id)
+    if not book:
+        abort(404)
     return render_template('view_book.html', book=book)
 
 

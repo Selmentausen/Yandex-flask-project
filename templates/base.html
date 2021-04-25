@@ -16,25 +16,31 @@
 <body>
 <header>
     <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="/">BookQ</a>
-        <a class="navbar-brand" href="/add_book">Add Book</a>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        {% if current_user.is_authenticated %}
-            <div>
-                <a class="btn btn-secondary navbar-brand" href="/user_page/{{ current_user.id }}">{{ current_user.name }}</a></br>
-                <a class="btn btn-danger navbar-brand" href="/logout">Выйти</a>
-            </div>
-        {% else %}
-            <p>
-                <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
-                <a class="btn btn-success" href="/login">Войти</a>
-            </p>
-        {% endif %}
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">BookQ</a>
+            {% if current_user.is_authenticated %}
+            <a class="navbar-brand" href="/book">Add Book</a>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+                <div>
+                    <a class="btn btn-secondary navbar-brand" href="/user_page/{{ current_user.id }}">{{ current_user.name }}</a>
+                    </br>
+                    <a class="btn btn-danger navbar-brand" href="/logout">Выйти</a>
+                </div>
+            {% else %}
+                <div>
+                    <a class="btn btn-success" href="/login">Войти</a>
+                    </br>
+                    <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+                </div>
+            {% endif %}
+        </div>
     </nav>
 </header>
 <!-- Begin page content -->
