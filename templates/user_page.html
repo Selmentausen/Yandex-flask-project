@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block head %}
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container border rounded">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="well well-sm">
+                <div class="row">
+                    <div class="col-sm-6 col-md-4">
+                        <img src="/static/img/placeholder.png" alt="" class="img-rounded img-responsive" />
+                    </div>
+                    <div class="col-sm-6 col-md-8">
+                        <h4>
+                            {{ user.name }}</h4>
+                        <small><cite title="San Francisco, USA">Not implemented<i class="glyphicon glyphicon-map-marker">
+                        </i></cite></small>
+                        <p>
+                            <i class="glyphicon glyphicon-envelope"></i>{{ user.email }}
+                            <br />
+                            <i class="glyphicon glyphicon-globe"></i><p class="border">{{ user.about }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,12 +1,12 @@
 import os
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, abort
 from data import db_session
 from data.users import User
 from data.books import Book
 from forms.user import RegisterForm, LoginForm
 from forms.book import BookForm
 from flask_restful import Api
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from resources import user_resource, book_resource
 from werkzeug.utils import secure_filename
 
@@ -77,6 +77,15 @@ def register():
         db_sess.commit()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
+
+
+@app.route('/user_page/<int:user_id>')
+def user_page(user_id):
+    session = db_session.create_session()
+    user = session.query(User).get(user_id)
+    if user != current_user:
+        abort(403)
+    return render_template('user_page.html', user=user)
 
 
 @app.route('/add_book', methods=['GET', 'POST'])
