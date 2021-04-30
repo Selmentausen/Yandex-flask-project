@@ -1,4 +1,5 @@
 import os
+from PIL import Image
 from flask import Flask, render_template, redirect, request, abort
 from data import db_session
 from data.users import User
@@ -115,6 +116,9 @@ def add_book():
         if form.image.data:
             image_path = f'img/{secure_filename(form.image.data.filename)}'
             request.files[form.image.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
+            im = Image.open(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
+            im = im.resize((75, 100))
+            im.save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
             book.image_path = image_path
         if form.content.data:
             file_path = f'books/{secure_filename(form.content.data.filename)}'
