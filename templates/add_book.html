@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block head %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+{% endblock %}
+
 {% block content %}
     <h1>Добавление Книги</h1>
     <form action="" method="post" enctype=multipart/form-data>
@@ -8,15 +16,6 @@
             {{ form.title.label }}<br>
             {{ form.title(class="form-control") }}<br>
             {% for error in form.title.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.author.label }}<br>
-            {{ form.author(class="form-control") }}<br>
-            {% for error in form.author.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
                 </div>
@@ -32,17 +31,46 @@
             {% endfor %}
         </p>
         <p>
-            {{ form.content.label }}<br>
-            {{ form.content(class="form-control") }}<br>
-            {% for error in form.content.errors %}
+            {{ form.categories.label }}<br>
+            {{ form.categories(class="selectpicker", multiple=True) }}<br>
+            {% for error in form.categories.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
                 </div>
             {% endfor %}
         </p>
         <p>
-            {{ form.image.label }}{{ form.image() }}
+            {{ form.is_user_author(type="checkbox") }} {{ form.is_user_author.label }}
+            <br>
+        </p>
+        <p>
+            {{ form.price.label }}:   {{ form.price(type="number") }} <br>
+            {% for error in form.release_date.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.release_date.label }}<br>
+            {{ form.release_date(class="form-control", type="date") }}<br>
+            {% for error in form.release_date.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.image.label }}  {{ form.image() }}
             {% for error in form.image.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.content.label }}  {{ form.content() }}
+            {% for error in form.content.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
                 </div>

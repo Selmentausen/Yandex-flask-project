@@ -3,6 +3,7 @@ from flask import Flask, render_template, redirect, request, abort
 from data import db_session
 from data.users import User
 from data.books import Book
+from data.categories import Category
 from forms.user import RegisterForm, LoginForm
 from forms.book import BookForm
 from flask_restful import Api
@@ -75,7 +76,7 @@ def register():
             username=form.username.data,
             email=form.email.data,
             first_name=form.first_name.data,
-            last_name=form.first_name.data,
+            last_name=form.last_name.data,
             about=form.about.data,
 
         )
@@ -99,24 +100,30 @@ def user_page(user_id):
 @app.route('/book', methods=['GET', 'POST'])
 def add_book():
     form = BookForm()
+    session = db_session.create_session()
+    form.categories.choices = [(category.id, category.name) for category in session.query(Category).all()]
     if form.validate_on_submit():
-        session = db_session.create_session()
         book = Book(
             title=form.title.data,
-            author=form.author.data,
             description=form.description.data,
-            content=form.content.data,
-            user_id=current_user.id
+            price=form.price.data
         )
+        if form.is_user_author:
+            book.author_id = current_user.id
+            book.author_name = current_user.last_name + ' ' + current_user.first_name
+        # Save image and/or book file to server if provided
         if form.image.data:
             image_path = f'img/{secure_filename(form.image.data.filename)}'
             request.files[form.image.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
             book.image_path = image_path
+        if form.content.data:
+            file_path = f'books/{secure_filename(form.content.data.filename)}'
+            request.files[form.content.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], file_path))
+            book.file_path = file_path
         session.add(book)
         session.commit()
         return redirect('/')
-    else:
-        return render_template('add_book.html', title='Добавление книги', form=form)
+    return render_template('add_book.html', title='Добавление книги', form=form)
 
 
 @login_required

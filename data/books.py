@@ -26,5 +26,6 @@ class Book(SqlAlchemyBase, SerializerMixin):
     file_path = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     price = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     release_date = sqlalchemy.Column(sqlalchemy.Date, default=datetime.datetime.now().date())
+    author_name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     author_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('authors.id'), nullable=True)
     author = orm.relation('Author', back_populates='books')
