@@ -15,31 +15,22 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">BookQ</a>
-            {% if current_user.is_authenticated %}
-            <a class="navbar-brand" href="/book">Add Book</a>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-                <div>
-                    <a class="btn btn-secondary navbar-brand" href="/user_page/{{ current_user.id }}">{{ current_user.name }}</a>
-                    </br>
-                    <a class="btn btn-danger navbar-brand" href="/logout">Выйти</a>
-                </div>
-            {% else %}
-                <div>
-                    <a class="btn btn-success" href="/login">Войти</a>
-                    </br>
-                    <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
-                </div>
-            {% endif %}
+    <nav class="navbar navbar-light bg-secondary">
+        <div class="container-fluid" style="padding: 0 !important">
+            <div class="row" style="width:100%">
+                <a class="navbar-brand col-auto" href="/">BookQ</a>
+                {% if current_user.is_authenticated %}
+                    <a class="navbar-brand col-auto" href="/book">Add Book</a>
+                    <a class="navbar-brand col-auto" href="#">Bookmarks</a>
+                    <div class="col"></div>
+                    <a class="btn btn-warning col-auto" href="/user_page/{{ current_user.id }}">{{ current_user.username }}</a>
+                    <a class="btn btn-danger col-auto" href="/logout">Выйти</a>
+                {% else %}
+                    <div class="col"></div>
+                    <a class="btn btn-success col-auto" href="/login">Войти</a>
+                    <a class="btn btn-primary col-auto" href="/register">Зарегистрироваться</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 </header>

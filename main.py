@@ -38,7 +38,9 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        user = db_sess.query(User).filter((User.email == form.username.data) |
+                                          (User.username == form.username.data)).first()
+        print(user)
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect("/")
@@ -64,14 +66,18 @@ def register():
                                    form=form,
                                    message="Пароли не совпадают")
         db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.email == form.email.data).first():
+        if db_sess.query(User).filter((User.email == form.email.data) |
+                                      (User.username == form.username.data)).first():
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Такой пользователь уже есть")
         user = User(
-            name=form.name.data,
+            username=form.username.data,
             email=form.email.data,
-            about=form.about.data
+            first_name=form.first_name.data,
+            last_name=form.first_name.data,
+            about=form.about.data,
+
         )
         user.create_password(form.password.data)
         db_sess.add(user)
@@ -100,13 +106,13 @@ def add_book():
             author=form.author.data,
             description=form.description.data,
             content=form.content.data,
+            user_id=current_user.id
         )
         if form.image.data:
             image_path = f'img/{secure_filename(form.image.data.filename)}'
             request.files[form.image.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
             book.image_path = image_path
-        current_user.books.append(book)
-        session.merge(current_user)
+        session.add(book)
         session.commit()
         return redirect('/')
     else:
@@ -125,6 +131,7 @@ def delete_book(book_id):
     return redirect('/')
 
 
+@login_required
 @app.route('/book/<int:book_id>', methods=['GET', 'POST'])
 def edit_book(book_id):
     form = BookForm()
@@ -163,6 +170,12 @@ def view_book(book_id):
     if not book:
         abort(404)
     return render_template('view_book.html', book=book)
+
+
+@app.route('/bookmarks')
+def view_bookmarks():
+    session = db_session.create_session()
+    books = session.query(Book).filter(Book.id in current_user.bookmarks_id)
 
 
 def main():

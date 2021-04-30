@@ -12,14 +12,17 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
-    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    first_name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    last_name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    username = sqlalchemy.Column(sqlalchemy.String, nullable=True, unique=True)
+    email = sqlalchemy.Column(sqlalchemy.String, index=True, unique=True, nullable=True)
     about = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    email = sqlalchemy.Column(sqlalchemy.String,
-                              index=True, unique=True, nullable=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    created_date = sqlalchemy.Column(sqlalchemy.DateTime,
-                                     default=datetime.datetime.now)
-    books = orm.relation('Book', back_populates='user')
+    author_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('authors.id'), nullable=True)
+    balance = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+    created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
+    author = orm.relation('Author', foreign_keys=[author_id])
+    books_in_cart = orm.relation('Book', secondary='books_in_user_cart', backref='users')
 
     def create_password(self, password):
         self.hashed_password = generate_password_hash(password)

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="container-fluid">
 {% for item in books %}
     {% if loop.index0 is divisibleby(3)%}
-        <div class="row">
+        <div class="row border">
     {% endif %}
             <div class="card" style="width: 18rem;">
                 <a href="/view_book/{{ item.id }}"><img src="/static/{{ item.image_path }}" class="card-img-top" alt="Image Not Found" onerror=this.src="/static/img/placeholder.png"></a>
