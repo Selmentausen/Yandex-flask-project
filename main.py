@@ -9,7 +9,7 @@ from forms.user import RegisterForm, LoginForm
 from forms.book import BookForm
 from flask_restful import Api
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from resources import user_resource, book_resource
+from resources import user_resource, book_resource, categories_resource
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -117,7 +117,7 @@ def add_book():
             image_path = f'img/{secure_filename(form.image.data.filename)}'
             request.files[form.image.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
             im = Image.open(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
-            im = im.resize((75, 100))
+            im = im.resize((75, 100    ))
             im.save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
             book.image_path = image_path
         if form.content.data:
@@ -183,18 +183,14 @@ def view_book(book_id):
     return render_template('view_book.html', book=book)
 
 
-@app.route('/bookmarks')
-def view_bookmarks():
-    session = db_session.create_session()
-    books = session.query(Book).filter(Book.id in current_user.bookmarks_id)
-
-
 def main():
     db_session.global_init('db/data.sqlite')
     api.add_resource(user_resource.UsersResource, '/api/users/<int:user_id>')
     api.add_resource(user_resource.UsersListResource, '/api/users')
     api.add_resource(book_resource.BookResource, '/api/books/<int:book_id>')
     api.add_resource(book_resource.BookListResource, '/api/books/')
+    api.add_resource(categories_resource.CategoryResource, '/api/category/<int:category_id>')
+    api.add_resource(categories_resource.CategoryListResource, '/api/category')
     app.run()
 
 

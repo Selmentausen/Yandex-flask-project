@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 
 
 class BookForm(FlaskForm):
-    title = StringField('Тутил', validators=[DataRequired()])
+    title = StringField('Титул', validators=[DataRequired()])
     description = TextAreaField('Краткое описание', validators=[DataRequired()])
     release_date = DateField('Время выпуска')
     is_user_author = BooleanField('Вы автор книги?')
