@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block head %}
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container border rounded">
-    <div class="row">
+<div class="container-fluid">
+    <div class="row justify-content-center">
         <div class="col-xs-12 col-sm-6 col-md-6">
             <div class="well well-sm">
                 <div class="row">
@@ -26,6 +27,25 @@
                 </div>
             </div>
         </div>
+    </div>
+    <h2> Cart: </h2>
+    <div>
+        <div class="row justify-content-start">
+            {% for item in books_in_cart %}
+                <div class="col-sm-3 card" style="width: 9rem;">
+                    <a href="/view_book/{{ item.id }}"><img src="/static/{{ item.image_path }}" class="card-img-top" alt="Image Not Found" onerror=this.src="/static/img/placeholder.png"></a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="card-text">{{ item.description }}</p>
+                        <p class="card-text">{{ item.author_name }}</p>
+                        <a href="/view_book/{{ item.id }}" class="btn btn-primary">Details</a>
+                        <a href="/delete_book_from_cart/{{ item.id }}" class="btn btn-danger">Remove<i class="fa fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+            {% if loop.index is divisibleby(3)%}
+                <div class="w-100"></div>
+            {% endif %}
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

@@ -4,6 +4,7 @@ from flask import Flask, render_template, redirect, request, abort
 from data import db_session
 from data.users import User
 from data.books import Book
+from data.authors import Author
 from data.categories import Category
 from forms.user import RegisterForm, LoginForm
 from forms.book import BookForm
@@ -26,13 +27,6 @@ api = Api(app)
 def load_user(user_id):
     session = db_session.create_session()
     return session.query(User).get(user_id)
-
-
-@app.route('/')
-def main_page():
-    session = db_session.create_session()
-    books = session.query(Book).all()
-    return render_template('index.html', books=books)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -88,13 +82,21 @@ def register():
     return render_template('register.html', title='Регистрация', form=form)
 
 
+@app.route('/')
+def main_page():
+    session = db_session.create_session()
+    books = session.query(Book).all()
+    return render_template('index.html', books=books)
+
+
 @app.route('/user_page/<int:user_id>')
 def user_page(user_id):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
+    books_in_cart = user.books_in_cart
     if user != current_user:
         abort(403)
-    return render_template('user_page.html', user=user)
+    return render_template('user_page.html', user=user, books_in_cart=books_in_cart)
 
 
 @login_required
@@ -109,22 +111,27 @@ def add_book():
             description=form.description.data,
             price=form.price.data
         )
+
         if form.is_user_author:
+            author = session.query(Author).get(current_user.author_id)
+            if not author:
+                author = Author(first_name=current_user.first_name, last_name=current_user.last_name)
+                current_user.author = author
+            book.author = author
             book.author_id = current_user.id
-            book.author_name = current_user.last_name + ' ' + current_user.first_name
         # Save image and/or book file to server if provided
         if form.image.data:
             image_path = f'img/{secure_filename(form.image.data.filename)}'
             request.files[form.image.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
             im = Image.open(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
-            im = im.resize((75, 100    ))
+            im = im.resize((75, 100))
             im.save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
             book.image_path = image_path
         if form.content.data:
             file_path = f'books/{secure_filename(form.content.data.filename)}'
             request.files[form.content.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], file_path))
             book.file_path = file_path
-        session.add(book)
+        session.merge(book)
         session.commit()
         return redirect('/')
     return render_template('add_book.html', title='Добавление книги', form=form)
@@ -170,7 +177,6 @@ def edit_book(book_id):
             book.image_path = image_path
         session.commit()
         return redirect(f'/view_book/{book.id}')
-
     return render_template('add_book.html', form=form, title='Изменение книги')
 
 
@@ -181,6 +187,34 @@ def view_book(book_id):
     if not book:
         abort(404)
     return render_template('view_book.html', book=book)
+
+
+@login_required
+@app.route('/add_book_to_cart/<int:book_id>')
+def add_book_to_cart(book_id):
+    session = db_session.create_session()
+    book = session.query(Book).get(book_id)
+    user = session.query(User).get(current_user.id)
+    if not book:
+        abort(404)
+    if book in user.books_in_cart:
+        return redirect('/')
+    user.books_in_cart.append(book)
+    session.merge(user)
+    session.commit()
+    return redirect('/')
+
+
+@login_required
+@app.route('/delete_book_from_cart/<int:book_id>')
+def delete_book_from_cart(book_id):
+    session = db_session.create_session()
+    book = session.query(Book).get(book_id)
+    user = session.query(User).get(current_user.id)
+    user.books_in_cart.remove(book)
+    session.merge(user)
+    session.commit()
+    return redirect(request.referrer)
 
 
 def main():

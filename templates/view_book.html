@@ -1,39 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
-    <div class="border rounded">
-        <img class="img-fluid" src="/static/{{ book.image_path }}">
+<div class="container">
+    <div class="row border border-info rounded">
+        <img class="img-rounded col-sm-3 border" src="/static/{{ book.image_path }}">
+        <div class="col">
+            <p class="col">Титул: {{ book.title }}</p>
+            <p class="col">Автор: {{ book.author.last_name }} {{ book.author.first_name }}</p>
+            <p class="col">Стоимость: {{ book.price }}</p>
+            <p class="col">Дата издания: {{ book.release_date }}</p>
+        </div>
     </div>
-    <div class="border rounded">
-        <h4>Титул: {{ book.title }}</h4>
-        <h5>Автор: {{ book.author }}</h5>
+    <h4 class="row">Описание</h4>
+    <div class="row-sm-4">
+        <p class="col">{{ book.description }}</p>
     </div>
-
-    <h4>Описание</h4>
-    <div class="border rounded">
-        <p>{{ book.description }}</p>
-    </div>
-
     {% if current_user.is_authenticated %}
-    <h4>Содержание</h4>
-    <div class="border rounded">
-        <p>{{ book.content }}</p>
+    <div class="row-sm-4">
+        <p></p>
     </div>
     {% else %}
-    <div class="alert alert-danger" role="alert">
-        Содержание книг доступно только зарегестрированным пользователям <a class="alert-link" href="/login">Войти</a>
-    </div>
+        <div class="alert alert-danger" role="alert">
+            Содержание книг доступно только зарегестрированным пользователям <a class="alert-link" href="/login">Войти</a>
+        </div>
     {% endif %}
-    {% if current_user == book.user %}
-    <div>
-        <a href="/book/{{ book.id }}" class="btn btn-warning">
-            Изменить
-        </a>
-        <a href="/book_delete/{{ book.id }}" class="btn btn-danger">
-            Удалить
-        </a>
-    </div>
+    {% if current_user.id == book.author_id %}
+        <div class="row justify-content-center">
+            <a href="/book/{{ book.id }}" class="btn btn-warning col-auto">
+                Изменить
+            </a>
+            <a href="/book_delete/{{ book.id }}" class="btn btn-danger col-auto">
+                Удалить
+            </a>
+        </div>
     {% endif %}
 </div>
 {% endblock %}
