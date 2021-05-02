@@ -127,10 +127,11 @@ def add_book():
                 author = Author(first_name=current_user.first_name, last_name=current_user.last_name)
                 user.author = author
             book.author = author
-            # book.author_id = current_user.id
         # Save image and/or book file to server if provided
         if form.image.data:
             image_path = f'img/{secure_filename(form.image.data.filename)}'
+            if session.query(Book).filter(Book.image_path == image_path).first():
+                pass
             request.files[form.image.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
             im = Image.open(os.path.join(app.config['UPLOAD_FOLDER'], image_path))
             im = im.resize((75, 100))
@@ -138,6 +139,9 @@ def add_book():
             book.image_path = image_path
         if form.content.data:
             file_path = f'books/{secure_filename(form.content.data.filename)}'
+            if session.query(Book).filter(Book.file_path == file_path).first():
+                pass
+                # file_path += '1'
             request.files[form.content.data.name].save(os.path.join(app.config['UPLOAD_FOLDER'], file_path))
             book.file_path = file_path
         session.merge(book)
