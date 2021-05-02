@@ -6,14 +6,15 @@ from wtforms.validators import DataRequired
 
 
 class BookForm(FlaskForm):
-    title = StringField('Титул', validators=[DataRequired()])
-    description = TextAreaField('Краткое описание', validators=[DataRequired()])
-    release_date = DateField('Время выпуска')
-    is_user_author = BooleanField('Вы автор книги?')
-    price = IntegerField('Стоимость книги')
-    content = FileField('Содержание',
-                        validators=[FileAllowed(['pdf', 'txt'], message='Выберите файл в формате (.txt, .pdf)')])
-    categories = SelectMultipleField('Категории', choices=[], coerce=int)
-    image = FileField('Обложка', validators=[
-        FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'bmp'], message='Неправильный формат изображения')])
-    submit = SubmitField('Добавить')
+    title = StringField('Title', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    release_date = DateField('Release date')
+    is_user_author = BooleanField('Are you the Author?')
+    price = IntegerField('Cost')
+    stock = IntegerField('Stock')
+    content = FileField('Content',
+                        validators=[FileAllowed(['pdf', 'txt'], message='File should be (.txt, .pdf)')])
+    categories = SelectMultipleField('Categories', choices=[], coerce=int)
+    image = FileField('Cover', validators=[
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'bmp'], message='File should be (.jpg, .jpeg, .png, .gif, .bmp)')])
+    submit = SubmitField('Add')

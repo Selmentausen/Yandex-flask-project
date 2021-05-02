@@ -23,6 +23,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
     author = orm.relation('Author', foreign_keys=[author_id])
     books_in_cart = orm.relation('Book', secondary='books_in_user_cart', backref='users')
+    bought_books = orm.relation('Book', secondary='bought_books')
 
     def create_password(self, password):
         self.hashed_password = generate_password_hash(password)

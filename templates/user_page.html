@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
 {% endblock %}
 
 {% block content %}
@@ -17,21 +15,20 @@
                     <div class="col-sm-6 col-md-8">
                         <h4>
                             {{ user.name }}</h4>
-                        <small><cite title="San Francisco, USA">Not implemented<i class="glyphicon glyphicon-map-marker">
-                        </i></cite></small>
-                        <p>
-                            <i class="glyphicon glyphicon-envelope"></i>{{ user.email }}
-                            <br />
-                            <i class="glyphicon glyphicon-globe"></i><p class="border">{{ user.about }}</p>
+                            <i class="bi-mailbox"></i>: {{ user.email }}</br>
+                            <i class="bi-globe"></i>: {{ user.username }}</br>
+                            <i class="bi-person"></i>: {{ user.last_name }} {{ user.first_name }}</br>
+                            <i class="bi-credit-card"></i>: {{ user.balance }}</br>
+                            <p class="border">{{ user.about }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <h2> Cart: </h2>
+    <h2> Owned: </h2>
     <div>
         <div class="row justify-content-start">
-            {% for item in books_in_cart %}
+            {% for item in bought_books %}
                 <div class="col-sm-3 card" style="width: 9rem;">
                     <a href="/view_book/{{ item.id }}"><img src="/static/{{ item.image_path }}" class="card-img-top" alt="Image Not Found" onerror=this.src="/static/img/placeholder.png"></a>
                     <div class="card-body">
@@ -39,7 +36,6 @@
                         <p class="card-text">{{ item.description }}</p>
                         <p class="card-text">{{ item.author_name }}</p>
                         <a href="/view_book/{{ item.id }}" class="btn btn-primary">Details</a>
-                        <a href="/delete_book_from_cart/{{ item.id }}" class="btn btn-danger">Remove<i class="fa fa-shopping-cart"></i></a>
                     </div>
                 </div>
             {% if loop.index is divisibleby(3)%}

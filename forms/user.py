@@ -5,18 +5,18 @@ from wtforms.validators import DataRequired
 
 
 class RegisterForm(FlaskForm):
-    username = StringField('Имя пользователя', validators=[DataRequired()])
-    email = EmailField('Почта', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    password_again = PasswordField('Повторите пароль', validators=[DataRequired()])
-    first_name = StringField('Имя', validators=[DataRequired()])
-    last_name = StringField('Фамилия', validators=[DataRequired()])
-    about = TextAreaField("Немного о себе")
-    submit = SubmitField('Войти')
+    username = StringField('Username', validators=[DataRequired()])
+    email = EmailField('Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password_again = PasswordField('Password again', validators=[DataRequired()])
+    first_name = StringField('First name', validators=[DataRequired()])
+    last_name = StringField('Last name', validators=[DataRequired()])
+    about = TextAreaField("About")
+    submit = SubmitField('Sing up')
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Введите Почту или Имя пользователя', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    remember_me = BooleanField('Запомнить меня')
-    submit = SubmitField('Войти')
+    username = StringField('Username/Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember me')
+    submit = SubmitField('Sing in')

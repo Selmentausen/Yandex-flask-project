@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-{% block head %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-{% endblock %}
-
 {% block content %}
 <div class="container-fluid" style="padding: 0 !important">
     <div class="row justify-content-start">
@@ -14,9 +10,15 @@
                         <h5 class="card-title">{{ item.title }}</h5>
                         <p class="card-text">{{ item.description }}</p>
                         <p class="card-text">{{ item.author.last_name }} {{ item.author.first_name }}</p>
+                        <p>Cost: {{ item.price }}₽</p>
+                        <p>In stock: {{ item.stock }}</p>
                         <a href="/view_book/{{ item.id }}" class="btn btn-primary">About</a>
                         {% if current_user not in item.users %}
-                            <a href="/add_book_to_cart/{{ item.id }}" class="btn btn-success">Add<i class="fa fa-shopping-cart"></i></a>
+                            {% if item.stock > 0 %}
+                                <a href="/add_book_to_cart/{{ item.id }}" class="btn btn-success">Add<i class="fa fa-shopping-cart"></i></a>
+                            {% else %}
+                                <a href="/add_book_to_cart/{{ item.id }}" class="btn btn-warning disabled">Add<i class="fa fa-shopping-cart"></i></a>
+                            {% endif %}
                         {% else %}
                             <a href="/delete_book_from_cart/{{ item.id }}" class="btn btn-danger">Remove<i class="fa fa-shopping-cart"></i></a>
                         {% endif %}

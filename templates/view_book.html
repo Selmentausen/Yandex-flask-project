@@ -5,13 +5,14 @@
     <div class="row border border-info rounded">
         <img class="img-rounded col-sm-3 border" src="/static/{{ book.image_path }}">
         <div class="col">
-            <p class="col">Титул: {{ book.title }}</p>
-            <p class="col">Автор: {{ book.author.last_name }} {{ book.author.first_name }}</p>
-            <p class="col">Стоимость: {{ book.price }}</p>
-            <p class="col">Дата издания: {{ book.release_date }}</p>
+            <p class="col">Title: {{ book.title }}</p>
+            <p class="col">Author: {{ book.author.last_name }} {{ book.author.first_name }}</p>
+            <p class="col">Cost: {{ book.price }}₽</p>
+            <p class="col">In stock: {{ book.stock }}</p>
+            <p class="col">Released: {{ book.release_date }}</p>
         </div>
     </div>
-    <h4 class="row">Описание</h4>
+    <h4 class="row">Description</h4>
     <div class="row-sm-4">
         <p class="col">{{ book.description }}</p>
     </div>
@@ -24,15 +25,18 @@
             Содержание книг доступно только зарегестрированным пользователям <a class="alert-link" href="/login">Войти</a>
         </div>
     {% endif %}
+    <div class="row justify-content-start">
     {% if current_user.id == book.author_id %}
-        <div class="row justify-content-center">
-            <a href="/book/{{ book.id }}" class="btn btn-warning col-auto">
-                Изменить
-            </a>
-            <a href="/book_delete/{{ book.id }}" class="btn btn-danger col-auto">
-                Удалить
-            </a>
-        </div>
+        <a href="/book/{{ book.id }}" class="btn btn-warning col-auto">
+            Edit
+        </a>
+        <a href="/book_delete/{{ book.id }}" class="btn btn-danger col-auto">
+            Remove
+        </a>
     {% endif %}
+    {% if book in bought_books %}
+        <a href="/download_book/{{ book.id }}" class="btn btn-success col-auto">Download</a>
+    {% endif %}
+    </div>
 </div>
 {% endblock %}

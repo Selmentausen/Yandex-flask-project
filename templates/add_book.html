@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Добавление Книги</h1>
+    <h1>Add book</h1>
     <form action="" method="post" enctype=multipart/form-data>
         {{ form.hidden_tag() }}
         <p>
@@ -45,7 +45,15 @@
         </p>
         <p>
             {{ form.price.label }}:   {{ form.price(type="number") }} <br>
-            {% for error in form.release_date.errors %}
+            {% for error in form.stock.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.stock.label }}:   {{ form.stock(type="number") }} <br>
+            {% for error in form.stock.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
                 </div>

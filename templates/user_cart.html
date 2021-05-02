@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid"></div>
+    <h2> Cart: </h2>
+    <div class="row justify-content-start">
+    {% for item in books_in_cart %}
+        <div class="col-sm-3 card" style="width: 9rem;">
+            <a href="/view_book/{{ item.id }}"><img src="/static/{{ item.image_path }}" class="card-img-top" alt="Image Not Found" onerror=this.src="/static/img/placeholder.png"></a>
+            <div class="card-body">
+                <h5 class="card-title">{{ item.title }}</h5>
+                <p class="card-text">{{ item.description }}</p>
+                <p class="card-text">{{ item.author_name }}</p>
+                <a href="/view_book/{{ item.id }}" class="btn btn-primary">Details</a>
+                <a href="/delete_book_from_cart/{{ item.id }}" class="btn btn-danger">Remove<i class="fa fa-shopping-cart"></i></a>
+            </div>
+        </div>
+        {% if loop.index is divisibleby(3)%}
+            <div class="w-100"></div>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <div>
+        <a href="/checkout/{{ current_user.id }}" class="btn btn-success">Checkout</a>
+        <a href="/empty_cart/{{ current_user.id }}" class="btn btn-danger">Remove all</a>
+    </div>
+</div>
+ {% endblock %}
