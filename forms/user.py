@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, TextAreaField, SubmitField, BooleanField
+from wtforms import PasswordField, StringField, TextAreaField, SubmitField, BooleanField, IntegerField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 
@@ -20,3 +20,11 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember me')
     submit = SubmitField('Sing in')
+
+
+class BalanceForm(FlaskForm):
+    card = StringField('Card number', validators=[DataRequired()])
+    date = StringField('Extension date', validators=[DataRequired()])
+    cvv = StringField('cvv', validators=[DataRequired()])
+    amount = IntegerField('Amount', validators=[DataRequired()])
+    submit = SubmitField('Add')

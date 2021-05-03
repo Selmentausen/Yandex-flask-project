@@ -1,7 +1,4 @@
 {% extends "base.html" %}
-{% block head %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
-{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -18,7 +15,7 @@
                             <i class="bi-mailbox"></i>: {{ user.email }}</br>
                             <i class="bi-globe"></i>: {{ user.username }}</br>
                             <i class="bi-person"></i>: {{ user.last_name }} {{ user.first_name }}</br>
-                            <i class="bi-credit-card"></i>: {{ user.balance }}</br>
+                            <i class="bi-credit-card"></i>: {{ user.balance }}₽</br>
                             <p class="border">{{ user.about }}</p>
                     </div>
                 </div>
@@ -30,12 +27,13 @@
         <div class="row justify-content-start">
             {% for item in bought_books %}
                 <div class="col-sm-3 card" style="width: 9rem;">
-                    <a href="/view_book/{{ item.id }}"><img src="/static/{{ item.image_path }}" class="card-img-top" alt="Image Not Found" onerror=this.src="/static/img/placeholder.png"></a>
+                    <a href="/view_book/{{ item.id }}"><img src="/static/img/{{ item.image_path }}" class="card-img-top" alt="Image Not Found" onerror=this.src="/static/img/placeholder.png"></a>
                     <div class="card-body">
                         <h5 class="card-title">{{ item.title }}</h5>
                         <p class="card-text">{{ item.description }}</p>
                         <p class="card-text">{{ item.author_name }}</p>
                         <a href="/view_book/{{ item.id }}" class="btn btn-primary">Details</a>
+                        <a href="/download_book/{{ item.id }}" class="btn btn-success col-auto">Download</a>
                     </div>
                 </div>
             {% if loop.index is divisibleby(3)%}
