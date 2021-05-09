@@ -16,6 +16,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from resources import user_resource, book_resource, categories_resource
 import uuid
 
+
 wtforms_json.init()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -32,7 +33,7 @@ def resize_and_save_image(filename):
     file_path = f'{uuid.uuid4().hex}.{extension}'
     request.files['image'].save(os.path.join(app.config['UPLOAD_FOLDER'], 'img', file_path))
     im = Image.open(os.path.join(app.config['UPLOAD_FOLDER'], 'img', file_path))
-    im = im.resize((75, 100))
+    im = im.resize((300, 400))
     im.save(os.path.join(app.config['UPLOAD_FOLDER'], 'img', file_path))
     return file_path
 
@@ -87,6 +88,7 @@ def register():
             return render_template('register.html', title='Sing up',
                                    form=form,
                                    message="Username/email exists")
+        # noinspection PyArgumentList
         user = User(
             username=form.username.data.lower(),
             email=form.email.data.lower(),
@@ -132,6 +134,8 @@ def add_book():
                                session.query(Category).order_by(Category.name).all()]
     if form.validate_on_submit():
         user = session.query(User).get(current_user.id)
+
+        # noinspection PyArgumentList
         book = Book(
             title=form.title.data,
             description=form.description.data,
@@ -143,6 +147,7 @@ def add_book():
         if form.is_user_author:
             author = session.query(Author).get(user.author_id)
             if not author:
+                # noinspection PyArgumentList
                 author = Author(first_name=current_user.first_name, last_name=current_user.last_name)
                 user.author = author
             book.author = author
@@ -198,6 +203,7 @@ def edit_book(book_id):
         if form.is_user_author:
             author = session.query(Author).get(current_user.author_id)
             if not author:
+                # noinspection PyArgumentList
                 author = Author(first_name=current_user.first_name, last_name=current_user.last_name)
                 current_user.author = author
             book.author = author

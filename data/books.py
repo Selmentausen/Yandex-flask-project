@@ -13,13 +13,15 @@ books_to_categories = sqlalchemy.Table('books_to_categories',
                                        SqlAlchemyBase.metadata,
                                        sqlalchemy.Column('categories', sqlalchemy.Integer,
                                                          sqlalchemy.ForeignKey('categories.id')),
-                                       sqlalchemy.Column('books', sqlalchemy.Integer, sqlalchemy.ForeignKey('books.id')))
+                                       sqlalchemy.Column('books', sqlalchemy.Integer,
+                                                         sqlalchemy.ForeignKey('books.id')))
 
 bought_books = sqlalchemy.Table('bought_books',
                                 SqlAlchemyBase.metadata,
                                 sqlalchemy.Column('books', sqlalchemy.Integer, sqlalchemy.ForeignKey('books.id')),
                                 sqlalchemy.Column('users', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
                                 )
+
 
 class Book(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'books'
