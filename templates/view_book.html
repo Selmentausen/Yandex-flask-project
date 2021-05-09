@@ -26,7 +26,7 @@
         </div>
     {% endif %}
     <div class="row justify-content-start">
-    {% if current_user.id == book.author_id %}
+    {% if current_user.author.id == book.author_id %}
         <a href="/book/{{ book.id }}" class="btn btn-warning col-auto">
             Edit
         </a>
@@ -34,7 +34,7 @@
             Remove
         </a>
     {% endif %}
-    {% if book in bought_books %}
+    {% if book in bought_books or book.author_id == current_user.author.id %}
         <a href="/download_book/{{ book.id }}" class="btn btn-success col-auto">Download</a>
     {% endif %}
     </div>

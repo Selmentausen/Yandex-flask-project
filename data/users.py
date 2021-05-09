@@ -21,7 +21,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     author_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('authors.id'), nullable=True)
     balance = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
-    author = orm.relation('Author', foreign_keys=[author_id])
+    author = orm.relation('Author', foreign_keys=[author_id], lazy='subquery')
     books_in_cart = orm.relation('Book', secondary='books_in_user_cart', backref='users')
     bought_books = orm.relation('Book', secondary='bought_books')
 

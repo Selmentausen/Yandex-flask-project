@@ -10,7 +10,7 @@ from data.books import Book
 from data.authors import Author
 from data.categories import Category
 from forms.user import RegisterForm, LoginForm, BalanceForm
-from forms.book import BookForm
+from forms.book import BookForm, BookEditForm
 from flask_restful import Api
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from resources import user_resource, book_resource, categories_resource
@@ -112,7 +112,7 @@ def main_page():
         bought_books = session.query(User).get(current_user.id).bought_books
     else:
         bought_books = []
-    return render_template('index.html', books=books, bought_books=bought_books)
+    return render_template('index.html', books=books, bought_books=bought_books, title='BookQ')
 
 
 @app.route('/user_page/<int:user_id>')
@@ -120,6 +120,7 @@ def user_page(user_id):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
     books = user.bought_books
+    books.extend(session.query(Book).filter(Book.author_id == current_user.author.id).all())
     if user != current_user:
         abort(403)
     return render_template('user_page.html', user=user, bought_books=books)
@@ -161,7 +162,7 @@ def add_book():
         session.merge(book)
         session.commit()
         return redirect('/')
-    return render_template('add_book.html', title='Добавление книги', form=form)
+    return render_template('add_book.html', title='Add book', form=form, header='Add book')
 
 
 @login_required
@@ -181,8 +182,10 @@ def delete_book(book_id):
 @login_required
 @app.route('/book/<int:book_id>', methods=['GET', 'POST'])
 def edit_book(book_id):
-    form = BookForm()
+    form = BookEditForm()
     session = db_session.create_session()
+    form.categories.choices = [(category.id, category.name) for category in
+                               session.query(Category).order_by(Category.name).all()]
     if request.method == "GET":
         book = session.query(Book).get(book_id)
         if not book:
@@ -190,7 +193,6 @@ def edit_book(book_id):
         form.title.data = book.title
         form.description.data = book.description
         form.release_date.data = book.release_date
-        form.is_user_author.data = book.is_user_author
         form.price.data = book.price
         form.stock.data = book.stock
 
@@ -218,7 +220,7 @@ def edit_book(book_id):
         session.merge(book)
         session.commit()
         return redirect(f'/view_book/{book.id}')
-    return render_template('add_book.html', form=form, title='Изменение книги')
+    return render_template('add_book.html', form=form, title='Edit book', header='Edit Book')
 
 
 @app.route('/view_book/<int:book_id>')

@@ -15,7 +15,7 @@
                         <a href="/view_book/{{ item.id }}" class="btn btn-primary">About</a>
                         {% if current_user.is_authenticated %}
                             {% if current_user not in item.users %}
-                                {% if item in bought_books %}
+                                {% if item in bought_books or item.author_id == current_user.author.id%}
                                     <span class="btn btn-secondary disabled">Already Owned</span>
                                 {% elif item.stock > 0%}
                                     <a href="/add_book_to_cart/{{ item.id }}" class="btn btn-success">Add<i class="fa fa-shopping-cart"></i></a>
